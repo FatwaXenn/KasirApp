@@ -1,0 +1,19 @@
+<?php
+include "../config.php";
+
+if (isset($_GET['kode_produk']) && isset($_GET['jumlah'])) {
+    $kode_produk = $_GET['kode_produk'];
+
+    // Gunakan prepared statement untuk mencegah SQL injection
+    $stmt = $koneksi->prepare("SELECT kode_produk, nama_produk, harga FROM produk WHERE kode_produk = ?");
+    $stmt->bind_param("s", $kode_produk);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = $result->fetch_assoc();
+    
+    // Kirim detail produk dalam format JSON
+    echo json_encode($data);
+    
+    $stmt->close();
+}
+?>
